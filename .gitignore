@@ -1,0 +1,23 @@
+# --- Python backend ---
+backend/.venv/
+**/__pycache__/
+*.pyc
+
+# --- Generated data / build artifacts (regenerate with backend/load_subset.py + build_index.py) ---
+# Catalog images extracted from the HuggingFace dataset (~153 MB)
+backend/images/
+# Built vector index (~160 MB, exceeds GitHub's 100 MB file limit)
+backend/catalog.db
+# Extracted catalog metadata (~14 MB)
+backend/catalog.json
+
+# --- Secrets ---
+.env
+*.key
+
+# --- OS / editor noise ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

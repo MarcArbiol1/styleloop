@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StyleLoop</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">SL</div>
+          <div>
+            <strong>StyleLoop</strong>
+            <span>AI closet studio</span>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="Primary navigation">
+          <button class="nav-link active" data-view="dashboard">Dashboard</button>
+          <button class="nav-link nav-feature" data-view="ootd">OOTD</button>
+          <button class="nav-link nav-feature" data-view="inspire">Social Breakdown</button>
+          <button class="nav-link" data-view="closet">Closet</button>
+          <button class="nav-link" data-view="outfits">Outfit Generator</button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <span>Prototype mode</span>
+          <strong>Local data only</strong>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow" id="view-eyebrow">Today</p>
+            <h1 id="view-title">Your fit engine</h1>
+          </div>
+          <div class="context-pill">
+            <span id="weather-pill">62°F / 17°C, light rain</span>
+            <span id="calendar-pill">Class at 10:00</span>
+          </div>
+        </header>
+
+        <section class="view active" id="dashboard-view">
+          <div class="hero-panel">
+            <div>
+              <p class="eyebrow">OOTD + Social Breakdown</p>
+              <h2>Turn daily fits and saved posts into outfits you can actually wear.</h2>
+              <p>
+                Log what you wore. Drop a social media outfit. StyleLoop learns your closet and shows
+                what to reuse, what to skip, and what single piece completes the look.
+              </p>
+            </div>
+            <div class="hero-actions">
+              <button class="primary" data-jump="ootd">Log OOTD</button>
+              <button class="secondary" data-jump="inspire">Break down a post</button>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            <article class="metric">
+              <span>Closet items</span>
+              <strong id="closet-count">0</strong>
+            </article>
+            <article class="metric">
+              <span>Saved inspirations</span>
+              <strong id="inspiration-count">0</strong>
+            </article>
+            <article class="metric">
+              <span>Outfits created</span>
+              <strong id="outfit-count">0</strong>
+            </article>
+            <article class="metric">
+              <span>Best cost per wear</span>
+              <strong id="best-cpw">$0</strong>
+            </article>
+          </div>
+
+          <section class="ootd-spotlight">
+            <div>
+              <p class="eyebrow">Most important habit</p>
+              <h3>OOTD is how the closet builds itself</h3>
+              <p>
+                The app gets better every time the user logs what they actually wore. One photo becomes
+                multiple closet items, wear counts, style memory, and better recommendations.
+              </p>
+            </div>
+            <button class="primary" data-jump="ootd">Start daily fit log</button>
+          </section>
+
+          <section class="panel sync-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Live context</p>
+                <h3>Calendar and weather sync</h3>
+              </div>
+              <button class="primary" id="sync-weather">Use my location</button>
+            </div>
+            <div class="sync-grid">
+              <article class="sync-card weather-card">
+                <span>Weather</span>
+                <strong id="weather-summary">62°F / 17°C, light rain</strong>
+                <small id="weather-detail">Demo weather is active until you sync location.</small>
+              </article>
+              <article class="sync-card">
+                <span>Next event</span>
+                <strong id="calendar-summary">Class at 10:00</strong>
+                <small id="calendar-detail">Used to pick outfit comfort, formality, and commute needs.</small>
+              </article>
+              <article class="sync-card sync-controls">
+                <div class="input-row compact">
+                  <input id="calendar-url" type="url" placeholder="Paste your calendar's iCal link (Google/Apple/Outlook)" />
+                  <button class="secondary" id="connect-calendar">Connect</button>
+                </div>
+                <p class="method-status" id="calendar-status"></p>
+                <label class="mini-upload" for="calendar-upload">
+                  <input type="file" id="calendar-upload" accept=".ics,text/calendar" />
+                  Import .ics
+                </label>
+                <div class="input-row compact">
+                  <input id="manual-event" placeholder="Add event, e.g. Dinner at 20:00" />
+                  <button class="secondary" id="save-event">Add</button>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <div class="two-column">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Next best move</p>
+                  <h3>Missing piece finder</h3>
+                </div>
+              </div>
+              <div id="missing-piece-preview" class="stack"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Style memory</p>
+                  <h3>What the app is learning</h3>
+                </div>
+              </div>
+              <div class="tag-cloud" id="style-memory"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="ootd-view">
+          <div class="ootd-hero">
+            <div>
+              <p class="eyebrow">Daily fit log</p>
+              <h2>Take one mirror pic. We build the wardrobe from real outfits.</h2>
+              <p>
+                This is the easiest way to collect closet data without asking users to photograph
+                100 pieces on day one.
+              </p>
+            </div>
+            <div class="ootd-stats">
+              <article>
+                <span>OOTDs logged</span>
+                <strong id="ootd-count">0</strong>
+              </article>
+              <article>
+                <span>Items discovered</span>
+                <strong id="ootd-items-count">0</strong>
+              </article>
+            </div>
+          </div>
+
+          <div class="two-column ootd-workspace">
+            <section class="panel ootd-capture">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Capture</p>
+                  <h3>Upload today's fit</h3>
+                </div>
+              </div>
+              <label class="upload-zone ootd-upload" for="ootd-daily-upload">
+                <input type="file" id="ootd-daily-upload" accept="image/*" />
+                <span>Drop mirror pic or choose image</span>
+              </label>
+              <div class="image-preview" id="ootd-daily-preview"></div>
+              <div class="mood-row" aria-label="OOTD mood">
+                <button class="mood active" data-mood="chill">Chill</button>
+                <button class="mood" data-mood="school">School</button>
+                <button class="mood" data-mood="going out">Going out</button>
+                <button class="mood" data-mood="clean">Clean</button>
+              </div>
+              <div class="form-actions">
+                <button class="primary" id="log-ootd">Log OOTD and extract items</button>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Auto closet growth</p>
+                  <h3>Detected from daily fits</h3>
+                </div>
+              </div>
+              <div id="ootd-detected" class="stack empty-state">Log an OOTD to see extracted pieces.</div>
+            </section>
+          </div>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Recent</p>
+                <h3>OOTD history</h3>
+              </div>
+            </div>
+            <div class="inspiration-grid" id="ootd-feed"></div>
+          </section>
+        </section>
+
+        <section class="view" id="inspire-view">
+          <div class="two-column">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Social media breakdown</p>
+                  <h3>Drop a saved fit</h3>
+                </div>
+              </div>
+              <label class="upload-zone" for="inspiration-upload">
+                <input type="file" id="inspiration-upload" accept="image/*" />
+                <span>Upload screenshot from TikTok, Instagram, Pinterest, or a creator post</span>
+              </label>
+              <div class="input-row">
+                <input id="social-url" type="url" placeholder="Paste TikTok, Instagram, Pinterest, or retailer URL" />
+                <button class="secondary" id="save-social">Save link</button>
+              </div>
+              <div class="image-preview" id="inspiration-preview"></div>
+              <div class="form-actions">
+                <button class="primary" id="analyze-inspiration">Break down the fit</button>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">AI breakdown</p>
+                  <h3>Pieces, matches, and what to buy</h3>
+                </div>
+              </div>
+              <div id="analysis-output" class="stack empty-state">No inspiration analyzed yet.</div>
+            </section>
+          </div>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Saved board</p>
+                <h3>Social breakdown history</h3>
+              </div>
+            </div>
+            <div class="inspiration-grid" id="inspiration-grid"></div>
+          </section>
+        </section>
+
+        <section class="view" id="closet-view">
+          <div class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Fast closet builder</p>
+                <h3>Add items without photographing everything</h3>
+              </div>
+            </div>
+            <div class="method-grid">
+              <button class="method active" data-method="catalog">Search catalog</button>
+              <button class="method" data-method="ootd">OOTD capture</button>
+              <button class="method" data-method="photo">One-tap photo</button>
+            </div>
+
+            <div class="method-panel active" id="catalog-method">
+              <div class="input-row">
+                <input id="catalog-query" placeholder="Search real products: black hoodie, blue jeans, white sneakers, navy shirt" />
+                <button class="secondary" id="catalog-search">Search</button>
+              </div>
+              <div class="product-grid" id="catalog-results"></div>
+            </div>
+
+            <div class="method-panel" id="ootd-method">
+              <label class="upload-zone" for="ootd-upload">
+                <input type="file" id="ootd-upload" accept="image/*" />
+                <span>Add an outfit photo — every piece it detects is added to your closet</span>
+              </label>
+              <div class="image-preview" id="ootd-method-preview"></div>
+              <div class="form-actions">
+                <button class="primary" id="slice-ootd">Detect items and add</button>
+              </div>
+              <p class="method-status" id="ootd-method-status"></p>
+            </div>
+
+            <div class="method-panel" id="photo-method">
+              <label class="upload-zone" for="item-photo-upload">
+                <input type="file" id="item-photo-upload" accept="image/*" />
+                <span>Photograph one item — it's identified and added with its photo</span>
+              </label>
+              <div class="image-preview" id="photo-preview"></div>
+              <div class="form-actions">
+                <button class="primary" id="magic-photo">Identify and add</button>
+              </div>
+              <p class="method-status" id="photo-status"></p>
+            </div>
+          </div>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Digital wardrobe</p>
+                <h3>Your closet</h3>
+              </div>
+              <button class="secondary" id="seed-closet">Add sample closet</button>
+            </div>
+            <div class="closet-grid" id="closet-grid"></div>
+          </section>
+        </section>
+
+        <section class="view" id="outfits-view">
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">AI stylist</p>
+                <h3>Generate custom outfits</h3>
+              </div>
+            </div>
+            <div class="generator-context" id="generator-context"></div>
+            <div class="controls-grid">
+              <label>
+                Occasion
+                <select id="occasion">
+                  <option>School</option>
+                  <option>Work</option>
+                  <option>Date night</option>
+                  <option>Weekend</option>
+                  <option>Travel</option>
+                  <option>Party</option>
+                </select>
+              </label>
+              <label>
+                Weather
+                <select id="weather">
+                  <option>Light rain</option>
+                  <option>Cold</option>
+                  <option>Warm</option>
+                  <option>Hot</option>
+                  <option>Windy</option>
+                </select>
+              </label>
+              <label>
+                Calendar context
+                <select id="calendar-context">
+                  <option>Use synced event</option>
+                  <option>None</option>
+                  <option>Formal</option>
+                  <option>Casual</option>
+                  <option>Active commute</option>
+                </select>
+              </label>
+              <label>
+                Budget for missing pieces
+                <input id="budget" type="range" min="20" max="300" value="90" />
+                <span id="budget-value">$90</span>
+              </label>
+              <label>
+                Style direction
+                <select id="style-direction">
+                  <option>Minimal streetwear</option>
+                  <option>Clean classic</option>
+                  <option>Soft casual</option>
+                  <option>Bold trend</option>
+                  <option>Smart relaxed</option>
+                </select>
+              </label>
+            </div>
+            <div class="form-actions">
+              <button class="primary" id="generate-outfits">Generate outfits</button>
+              <button class="secondary" id="save-current-outfits">Save set</button>
+            </div>
+          </section>
+
+          <section class="outfit-grid" id="outfit-grid"></section>
+        </section>
+      </main>
+    </div>
+
+    <template id="piece-template">
+      <article class="piece-card">
+        <div class="swatch"></div>
+        <div>
+          <strong></strong>
+          <span></span>
+        </div>
+      </article>
+    </template>
+
+    <script src="app.js?v=nohack6"></script>
+  </body>
+</html>
